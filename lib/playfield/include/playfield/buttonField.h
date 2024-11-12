@@ -21,7 +21,7 @@ namespace playfield
 
   private:
     int calcCellId( float posX, float posY ) const;
-    void onCellChange(int col, int row, logic::CellType type);
+    void onCellChange(int col, int row, logic::CellType type, int neighbours);
 
     utils::Size mSize;
     int mSizeColRows;

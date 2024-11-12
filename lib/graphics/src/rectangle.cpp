@@ -30,4 +30,14 @@ namespace graphics
     SDL_RenderFillRect(renderer, &fillRect);
   }
 
+  utils::Pos Rectangle::getPos() const
+  {
+    return mPos;
+  }
+
+  utils::Size Rectangle::getSize() const
+  {
+    return mSize;
+  }
+
 }

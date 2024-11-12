@@ -5,14 +5,14 @@ namespace utils
 
   struct Pos
   {
-    float xPos;
-    float yPos;
+    float xPos{};
+    float yPos{};
   };
 
   struct Size
   {
-    float width;
-    float height;
+    float width{};
+    float height{};
   };
 
   struct Color

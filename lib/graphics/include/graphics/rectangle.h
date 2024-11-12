@@ -16,6 +16,8 @@ namespace graphics
     void moveTo(utils::Pos pos);
     void setColor(utils::Color color);
     void draw(SDL_Renderer* renderer) const;
+    utils::Pos getPos() const;
+    utils::Size getSize() const;
 
   private:
     utils::Pos mPos;

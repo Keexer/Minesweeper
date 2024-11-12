@@ -14,7 +14,7 @@ namespace logic
     MINE
   };
 
-  using OnCellChange = std::function<void(int, int, CellType)>;
+  using OnCellChange = std::function<void(int, int, CellType, int)>;
 
   class Board
   {

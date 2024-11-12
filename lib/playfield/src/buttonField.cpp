@@ -16,7 +16,7 @@ namespace playfield
   void ButtonField::setBoard(int sizeColRows, int mines)
   {
     mBoard.init(sizeColRows, mines);
-    mBoard.setOnChange([this](int col, int row, logic::CellType type) {onCellChange(col, row, type); });
+    mBoard.setOnChange([this](int col, int row, logic::CellType type, int neighbours) {onCellChange(col, row, type, neighbours); });
 
     mSizeColRows = sizeColRows;
 
@@ -75,9 +75,9 @@ namespace playfield
     return xPos * mSizeColRows + yPos;
   }
 
-  void ButtonField::onCellChange(int col, int row, logic::CellType type)
+  void ButtonField::onCellChange(int col, int row, logic::CellType type, int neighbours)
   {
-    mCells.at(col * mSizeColRows + row).onCellChanged(type);
+    mCells.at(col * mSizeColRows + row).onCellChanged(type, neighbours);
   }
 
 }

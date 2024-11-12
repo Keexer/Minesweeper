@@ -37,7 +37,7 @@ namespace logic
 
       if (mOnChange)
       {
-        mOnChange(col, row, element.type);
+        mOnChange(col, row, element.type, element.neighbours);
       }
     }
   }
@@ -182,7 +182,7 @@ namespace logic
         checkRight(currentIndex);
       }
 
-      mOnChange(currentIndex / mColRowSize, currentIndex % mColRowSize, mBoard.at(currentIndex).type);
+      mOnChange(currentIndex / mColRowSize, currentIndex % mColRowSize, mBoard.at(currentIndex).type, mBoard.at(currentIndex).neighbours);
       emptyCell.pop();
     }
   }
