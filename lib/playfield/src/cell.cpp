@@ -1,5 +1,7 @@
 #include "playfield/cell.h"
 
+#include <string>
+
 namespace
 {
   static constexpr utils::Color ON_DOWN{ 255, 255, 255, 255 };
@@ -25,18 +27,19 @@ namespace playfield
   void Cell::draw(SDL_Renderer* const renderer) const
   {
     mRectangle.draw(renderer);
+    mText.draw(renderer);
   }
 
   void Cell::onPressed()
   {
-    if (isRevealed)
+    if (mIsRevealed)
     {
       return;
     }
     mRectangle.setColor(ON_DOWN);
   }
 
-  void Cell::onCellChanged(logic::CellType type)
+  void Cell::onCellChanged(logic::CellType type, int neighbours)
   {
     switch (type)
     {
@@ -50,12 +53,26 @@ namespace playfield
       mRectangle.setColor(MINE);
       break;
     }
-    isRevealed = true;
+    mIsRevealed = true;
+
+    if (neighbours > 0)
+    {
+      mText.setMessage(std::to_string(neighbours));
+      utils::Pos pos = mRectangle.getPos();
+      utils::Size size = mRectangle.getSize();
+      pos.xPos += size.width / 2;
+      pos.yPos += size.height / 2;
+      mText.setPosition(pos);
+      mText.show();
+    }
   }
 
   void Cell::clearPressed()
   {
-    mRectangle.setColor(mColor);
+    if (!mIsRevealed)
+    {
+      mRectangle.setColor(mColor);
+    }
   }
 
 }

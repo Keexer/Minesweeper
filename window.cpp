@@ -3,12 +3,20 @@
 #include "playfield/background.h"
 #include "playfield/buttonField.h"
 
+#include "SDL3_ttf/SDL_ttf.h"
+
 bool Window::init(int width, int height)
 {
   mSize = { static_cast<float>(width), static_cast<float>(height) };
 
   if (!SDL_Init(SDL_INIT_VIDEO)) {
     SDL_Log("SDL_Init failed (%s)", SDL_GetError());
+    return false;
+  }
+
+  if (!TTF_Init())
+  {
+    SDL_Log("TTF_Init failed");
     return false;
   }
 
@@ -30,6 +38,18 @@ int Window::run()
   background.init();
   playfield::ButtonField buttonField{ mSize };
   buttonField.setBoard(colRowSize, mines);
+
+  TTF_Font* font = TTF_OpenFont("C:/Repos/Minesweeper/Minesweeper/build/Debug/Tinos-Italic.ttf", 24);
+  if (font == nullptr)
+  {
+    return false;
+  }
+
+  SDL_Color White{ 255,255,255, 255 };
+  SDL_Surface* surfaceMessage = TTF_RenderText_Blended(font, "Hello", 5, White);
+  SDL_Texture* message = SDL_CreateTextureFromSurface(mRenderer, surfaceMessage);
+  SDL_FRect rect{ .0f, .0f, static_cast<float>(surfaceMessage->w), static_cast<float>(surfaceMessage->h) };
+  SDL_DestroySurface(surfaceMessage);
 
   while (1) {
     int finished = 0;
@@ -66,14 +86,24 @@ int Window::run()
       break;
     }
 
-    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
     SDL_RenderClear(mRenderer);
 
     background.draw(mRenderer);
     buttonField.draw(mRenderer);
 
+    
+    //SDL_RenderTexture(mRenderer, message, NULL, &rect);
+
+    
+
     SDL_RenderPresent(mRenderer);
   }
+
+  SDL_DestroyTexture(message);
+
+  TTF_CloseFont(font);
+  TTF_Quit();
 
   SDL_DestroyRenderer(mRenderer);
   SDL_DestroyWindow(mWindow);
