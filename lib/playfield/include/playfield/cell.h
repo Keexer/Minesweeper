@@ -13,10 +13,11 @@ namespace playfield
   public:
     Cell(utils::Pos pos, utils::Size size);
     void setColor(utils::Color color);
-    void draw(SDL_Renderer* const renderer) const;
+    void draw(SDL_Renderer* const renderer);
     void onPressed();
     void onCellChanged(logic::CellType type, int neighbours);
     void clearPressed();
+    void reset();
 
   private:
     graphics::Rectangle mRectangle;

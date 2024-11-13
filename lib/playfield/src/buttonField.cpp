@@ -11,12 +11,14 @@ namespace playfield
 
   ButtonField::ButtonField(utils::Size size)
     : mSize{size}
+    , mOverlay{ {}, size }
   {}
 
   void ButtonField::setBoard(int sizeColRows, int mines)
   {
     mBoard.init(sizeColRows, mines);
     mBoard.setOnChange([this](int col, int row, logic::CellType type, int neighbours) {onCellChange(col, row, type, neighbours); });
+    mBoard.setOnGameOver([this](bool won) { onGameOver(won); });
 
     mSizeColRows = sizeColRows;
 
@@ -36,22 +38,36 @@ namespace playfield
     }
   }
 
-  void ButtonField::draw(SDL_Renderer* const renderer) const
+  void ButtonField::draw(SDL_Renderer* const renderer)
   {
-    for (const auto& Cell : mCells)
+    for (auto& Cell : mCells)
     {
       Cell.draw(renderer);
     }
+    mOverlay.draw(renderer);
   }
 
   void ButtonField::onPressed(float posX, float posY)
   {
-    pressedCellId = calcCellId(posX, posY);
-    mCells.at(*pressedCellId).onPressed();
+    if (!mOverlay.isShown())
+    {
+      pressedCellId = calcCellId(posX, posY);
+      mCells.at(*pressedCellId).onPressed();
+    }
   }
 
   void ButtonField::onRelease(float posX, float posY)
   {
+    if (mOverlay.isShown())
+    {
+      mBoard.reset();
+      mOverlay.hide();
+      for (auto& cell : mCells)
+      {
+        cell.reset();
+      }
+      return;
+    }
     if (pressedCellId && pressedCellId == calcCellId(posX, posY))
     {
       mBoard.setClicked(*pressedCellId / mSizeColRows, *pressedCellId % mSizeColRows);
@@ -78,6 +94,21 @@ namespace playfield
   void ButtonField::onCellChange(int col, int row, logic::CellType type, int neighbours)
   {
     mCells.at(col * mSizeColRows + row).onCellChanged(type, neighbours);
+  }
+
+  void ButtonField::onGameOver(bool won)
+  {
+    if (won)
+    {
+      mOverlay.setMessage("Win", utils::Color{0, 255, 0, 255});
+    }
+    else
+    {
+      mOverlay.setMessage("Game over", utils::Color{255, 0, 0, 255});
+    }
+
+    mOverlay.setOverlayColor({ 200, 200, 200, 125 });
+    mOverlay.show();
   }
 
 }

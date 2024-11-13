@@ -9,6 +9,7 @@ namespace logic
 
   void Board::init(int colRowSize, int mines)
   {
+    mMines = mines;
     mColRowSize = colRowSize;
     mBoard.assign(colRowSize * colRowSize, { CellType::EMPTY, true, 0 });
     assert(mines < mColRowSize * mColRowSize && "Amount of mines are larger than game board");
@@ -25,7 +26,10 @@ namespace logic
     {
       if (element.type == CellType::MINE)
       {
-        // handle game over
+        if (mOnGameOver)
+        {
+          mOnGameOver(false);
+        }
       }
       else if (element.type == CellType::EMPTY)
       {
@@ -40,11 +44,26 @@ namespace logic
         mOnChange(col, row, element.type, element.neighbours);
       }
     }
+
+    if (std::count_if(std::begin(mBoard), std::end(mBoard), [](const auto& element) {return element.isHidden; }) == mMines)
+    {
+      mOnGameOver(true);
+    }
   }
 
   void Board::setOnChange(OnCellChange&& onChange)
   {
     mOnChange = std::move(onChange);
+  }
+
+  void Board::setOnGameOver(OnGameOver&& onGameOver)
+  {
+    mOnGameOver = std::move(onGameOver);
+  }
+
+  void Board::reset()
+  {
+    init(mColRowSize, mMines);
   }
 
   void Board::randomizeMines(int mines)
@@ -182,7 +201,11 @@ namespace logic
         checkRight(currentIndex);
       }
 
-      mOnChange(currentIndex / mColRowSize, currentIndex % mColRowSize, mBoard.at(currentIndex).type, mBoard.at(currentIndex).neighbours);
+      if (mOnChange)
+      {
+        mBoard.at(currentIndex).isHidden = false;
+        mOnChange(currentIndex / mColRowSize, currentIndex % mColRowSize, mBoard.at(currentIndex).type, mBoard.at(currentIndex).neighbours);
+      }
       emptyCell.pop();
     }
   }

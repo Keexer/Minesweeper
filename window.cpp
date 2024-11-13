@@ -26,6 +26,8 @@ bool Window::init(int width, int height)
     return false;
   }
 
+  mFonts.init();
+
   return true;
 }
 
@@ -86,16 +88,13 @@ int Window::run()
       break;
     }
 
+    SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
+    SDL_SetRenderDrawBlendMode(mRenderer, blendMode);
     SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 0);
     SDL_RenderClear(mRenderer);
 
     background.draw(mRenderer);
     buttonField.draw(mRenderer);
-
-    
-    //SDL_RenderTexture(mRenderer, message, NULL, &rect);
-
-    
 
     SDL_RenderPresent(mRenderer);
   }

@@ -3,11 +3,13 @@ cmake_minimum_required(VERSION 3.29)
 set(Headers
 	include/graphics/rectangle.h
 	include/graphics/text.h
+	include/graphics/fonts.h
 )
 	
 set(Source
 	src/rectangle.cpp
 	src/text.cpp
+	src/fonts.cpp
 )
 
 add_subdirectory(../../external/SDL EXCLUDE_FROM_ALL SDL)
