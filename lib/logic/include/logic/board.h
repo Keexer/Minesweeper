@@ -14,6 +14,7 @@ namespace logic
     MINE
   };
 
+  using OnGameOver = std::function<void(bool)>;
   using OnCellChange = std::function<void(int, int, CellType, int)>;
 
   class Board
@@ -22,6 +23,8 @@ namespace logic
     void init(int colRowSize, int mines);
     void setClicked(int col, int row);
     void setOnChange(OnCellChange&& onChange);
+    void setOnGameOver(OnGameOver&& onGameOver);
+    void reset();
 
   private:
     void randomizeMines(int mines);
@@ -39,6 +42,8 @@ namespace logic
     int mColRowSize{};
     std::vector<Element> mBoard;
     OnCellChange mOnChange;
+    OnGameOver mOnGameOver;
+    int mMines{};
   };
 
 }

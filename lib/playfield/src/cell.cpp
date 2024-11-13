@@ -8,6 +8,7 @@ namespace
   static constexpr utils::Color MINE{ 255, 0, 0, 255 };
   static constexpr utils::Color EMPTY{ 0, 0, 255, 255 };
   static constexpr utils::Color HINT{0, 255, 0, 255};
+  static constexpr utils::Color DEFAULT{255, 255, 0, 255};
 }
 
 namespace playfield
@@ -24,7 +25,7 @@ namespace playfield
     mRectangle.setColor(color);
   }
 
-  void Cell::draw(SDL_Renderer* const renderer) const
+  void Cell::draw(SDL_Renderer* const renderer)
   {
     mRectangle.draw(renderer);
     mText.draw(renderer);
@@ -73,6 +74,13 @@ namespace playfield
     {
       mRectangle.setColor(mColor);
     }
+  }
+
+  void Cell::reset()
+  {
+    mRectangle.setColor(DEFAULT);
+    mText.hide();
+    mIsRevealed = false;
   }
 
 }

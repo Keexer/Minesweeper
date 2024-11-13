@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/types.h"
+#include "graphics/fonts.h"
 
 #include <SDL3/SDL.h>
 /*
@@ -18,4 +19,5 @@ private:
   SDL_Window* mWindow = nullptr;
   SDL_Renderer* mRenderer = nullptr;
   utils::Size mSize;
+  graphics::Fonts mFonts;
 };

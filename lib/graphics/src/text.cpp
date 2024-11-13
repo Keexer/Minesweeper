@@ -1,17 +1,26 @@
 #include "graphics/text.h"
 
+#include "graphics/fonts.h"
+
 namespace graphics
 {
-  
-  Text::Text(const std::string& message)
-    : mMessage(message)
+
+  Text::Text()
   {
+    init();
+  }
+
+  Text::Text(const std::string& message)
+    : mMessage{ message }
+  {
+    init();
   }
 
   Text::Text(const std::string& message, utils::Pos pos)
-    : mMessage(message)
-    , mPos(pos)
+    : mMessage{ message }
+    , mPos{ pos }
   {
+    init();
   }
 
   Text::~Text()
@@ -32,6 +41,11 @@ namespace graphics
     mMessage = message;
   }
 
+  void Text::setColor(const utils::Color& color)
+  {
+    mTextColor = color;
+  }
+
   void Text::show()
   {
     mShow = true;
@@ -42,18 +56,23 @@ namespace graphics
     mShow = false;
   }
 
-  void Text::draw(SDL_Renderer* renderer) const
+  void Text::draw(SDL_Renderer* renderer)
   {
     if (mShow)
     {
-      static TTF_Font* font = TTF_OpenFont("C:/Repos/Minesweeper/Minesweeper/build/Debug/Tinos-Italic.ttf", 24);
-      SDL_Color White{ 255,255,255, 255 };
-      SDL_Surface* surfaceMessage = TTF_RenderText_Blended(font, mMessage.c_str(), mMessage.size(), White);
+      SDL_Color color{ mTextColor.r, mTextColor.g, mTextColor.b, mTextColor.a };
+      SDL_Surface* surfaceMessage = TTF_RenderText_Solid(mFont, mMessage.c_str(), mMessage.size(), color);
       mTexture = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
       SDL_FRect rect{ mPos.xPos, mPos.yPos, static_cast<float>(surfaceMessage->w), static_cast<float>(surfaceMessage->h) };
       SDL_DestroySurface(surfaceMessage);
       SDL_RenderTexture(renderer, mTexture, NULL, &rect);
     }
+  }
+
+  void Text::init()
+  {
+    mFont = Fonts::getFont("Tinos-Italic:24");
+    mTextColor = { 255, 255, 255, 255 };
   }
 
 }

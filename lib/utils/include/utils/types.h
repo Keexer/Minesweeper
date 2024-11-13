@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace utils
 {
 
@@ -7,20 +9,30 @@ namespace utils
   {
     float xPos{};
     float yPos{};
+
+    Pos operator/(int val)
+    {
+      return { xPos / val, yPos / val };
+    }
   };
 
   struct Size
   {
     float width{};
     float height{};
+
+    Pos operator/(int val)
+    {
+      return { width / val, height / val };
+    }
   };
 
   struct Color
   {
-    int r{};
-    int g{};
-    int b{};
-    int a{};
+    uint8_t r{};
+    uint8_t g{};
+    uint8_t b{};
+    uint8_t a{};
   };
 
 }

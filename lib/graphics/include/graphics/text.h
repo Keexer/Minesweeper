@@ -12,7 +12,7 @@ namespace graphics
   class Text
   {
   public:
-    Text() = default;
+    Text();
     explicit Text(const std::string& message);
     Text(const std::string& message, utils::Pos pos);
     ~Text();
@@ -23,14 +23,19 @@ namespace graphics
 
     void setPosition(utils::Pos pos);
     void setMessage(const std::string& message);
+    void setColor(const utils::Color& color);
     void show();
     void hide();
-    void draw(SDL_Renderer* renderer) const;
+    void draw(SDL_Renderer* renderer);
 
   private:
+    void init();
+
+    TTF_Font* mFont;
+    utils::Color mTextColor;
     std::string mMessage;
     utils::Pos mPos;
-    mutable SDL_Texture* mTexture{};
+    SDL_Texture* mTexture{};
     bool mShow{};
   };
 
